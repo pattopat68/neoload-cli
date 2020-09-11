@@ -91,6 +91,7 @@ def cli(ctx, model, writeto, overwrite, uploadandrunas, meta):
     if uploadandrunas:
         # do it
         nameorid = uploadandrunas
+        scenario_name = "Scenario1"
         MIN_WEB_VUS = 20
         web_vu = MIN_WEB_VUS
 
@@ -100,6 +101,7 @@ def cli(ctx, model, writeto, overwrite, uploadandrunas, meta):
             logging.debug('Got stdout: "{0}"'.format(f.getvalue()))
             result = json.loads(f.getvalue())
             web_vu = result["scenarios"][0]["scenarioVUs"]
+            scenario_name = result["scenarios"][0]["scenarioName"]
 
         if temp_dir is not None:
             logging.debug("Deleting temp directory: " + temp_dir)
@@ -116,7 +118,7 @@ def cli(ctx, model, writeto, overwrite, uploadandrunas, meta):
 
         f = io.StringIO()
         with redirect_stdout(f):
-            ctx.invoke(cli_run.cli, name_or_id=nameorid, web_vu=str(web_vu), detached=True)
+            ctx.invoke(cli_run.cli, name_or_id=nameorid, web_vu=str(web_vu), detached=True, scenario=scenario_name)
             logging.debug('Got stdout: "{0}"'.format(f.getvalue()))
             result = json.loads(f.getvalue())
 
